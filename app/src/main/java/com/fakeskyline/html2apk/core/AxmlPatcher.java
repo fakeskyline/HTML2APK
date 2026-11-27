@@ -34,6 +34,43 @@ public final class AxmlPatcher {
 
     private AxmlPatcher() {}
 
+    /** Rewrite the integer minSdkVersion in the compiled Android manifest. */
+    public static byte[] setMinSdkVersion(byte[] axml, int minSdk) throws Exception {
+        if (minSdk < 1 || minSdk > 1000) throw new IllegalArgumentException("invalid minimum SDK");
+        List<String> pool = listStrings(axml);
+        byte[] out = axml.clone();
+        int off = 8;
+        while (off + 8 <= out.length) {
+            int type = readU16(out, off);
+            int size = readU32(out, off + 4);
+            if (size < 8 || off + size > out.length) break;
+            if (type == 0x0102 && size >= 36) {
+                int elementName = readU32(out, off + 20);
+                if (elementName >= 0 && elementName < pool.size() && "uses-sdk".equals(pool.get(elementName))) {
+                    int attrStart = readU16(out, off + 24);
+                    int attrSize = readU16(out, off + 26);
+                    int attrCount = readU16(out, off + 28);
+                    int first = off + 16 + attrStart;
+                    for (int i = 0; i < attrCount; i++) {
+                        int a = first + i * attrSize;
+                        if (a + 20 > off + size) break;
+                        int nameIndex = readU32(out, a + 4);
+                        if (nameIndex >= 0 && nameIndex < pool.size() && "minSdkVersion".equals(pool.get(nameIndex))) {
+                            out[a + 15] = 0x10;
+                            out[a + 16] = (byte) minSdk;
+                            out[a + 17] = (byte) (minSdk >> 8);
+                            out[a + 18] = (byte) (minSdk >> 16);
+                            out[a + 19] = (byte) (minSdk >> 24);
+                            return out;
+                        }
+                    }
+                }
+            }
+            off += size;
+        }
+        throw new IllegalArgumentException("minSdkVersion attribute not found");
+    }
+
     /** Replace every pool string whose value equals a key in {@code replacements}. */
     public static byte[] replaceStrings(byte[] axml, Map<String, String> replacements) throws Exception {
         if (readU16(axml, 0) != RES_XML_TYPE) {
