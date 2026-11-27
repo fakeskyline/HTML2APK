@@ -1,6 +1,6 @@
 package com.fakeskyline.html2apk
 
-import android.app.Activity
+import androidx.activity.ComponentActivity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,7 +10,7 @@ import android.widget.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
-class MainActivity : Activity() {
+class MainActivity : ComponentActivity() {
     private var htmlUri: Uri? = null
     private var iconData: ByteArray? = null
     private var htmlLabel = "No HTML file selected"
