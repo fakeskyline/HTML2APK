@@ -127,7 +127,7 @@ class MainActivity : ComponentActivity() {
                     icons["res/drawable-nodpi-v4/launcher_icon.png"]=out.toByteArray()
                 }
                 val (key,certs)=signingIdentity()
-                val apk=ApkBuilder.build(template,html,name,pkg,icons,key,certs,cacheDir)
+                val apk=ApkBuilder.build(template,html,name,pkg,minApiValue,icons,key,certs,cacheDir)
                 val file=File(cacheDir,"output.apk");file.writeBytes(apk);resultApk=file
                 runOnUiThread { statusSafe("Build complete · "+(apk.size/1024)+" KB"); showTab(2) }
             } catch(e:Exception) {
