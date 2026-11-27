@@ -77,7 +77,7 @@ public final class ApkBuilder {
      * @return signed APK bytes
      */
     public static byte[] build(byte[] templateApk, byte[] html, String appName,
-                               String packageName, Map<String, byte[]> iconPngs,
+                               String packageName, int minSdkVersion, Map<String, byte[]> iconPngs,
                                PrivateKey signingKey,
                                List<Certificate> certificates,
                                File workDir) throws Exception {
@@ -107,7 +107,7 @@ public final class ApkBuilder {
                 data = iconPngs.get(name);
                 method = AlignedZipWriter.STORED;
             } else if (name.equals("AndroidManifest.xml")) {
-                data = AxmlPatcher.replaceStrings(data, replacements);
+                data = AxmlPatcher.setMinSdkVersion(AxmlPatcher.replaceStrings(data, replacements), minSdkVersion);
                 method = AlignedZipWriter.DEFLATED;
             } else if (name.equals("resources.arsc")) {
                 data = ArscPatcher.setPackageName(data, packageName);
@@ -148,7 +148,7 @@ public final class ApkBuilder {
                 .setV1SigningEnabled(true)
                 .setV2SigningEnabled(true)
                 .setV3SigningEnabled(true)
-                .setMinSdkVersion(24)
+                .setMinSdkVersion(minSdkVersion)
                 .build();
         signer.sign();
 
