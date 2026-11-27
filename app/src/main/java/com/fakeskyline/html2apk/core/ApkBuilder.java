@@ -58,9 +58,7 @@ public final class ApkBuilder {
 
     /** Entry names in the template APK for a density's launcher icons. */
     public static String[] iconEntryNames(String density) {
-        return new String[]{
-                "res/mipmap-" + density + "-v4/ic_launcher.png",
-                "res/mipmap-" + density + "-v4/ic_launcher_round.png"};
+        return new String[]{"res/drawable-nodpi-v4/launcher_icon.png"};
     }
 
     /**
