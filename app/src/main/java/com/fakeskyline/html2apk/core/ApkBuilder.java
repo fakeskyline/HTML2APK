@@ -47,7 +47,7 @@ import java.util.zip.ZipInputStream;
  */
 public final class ApkBuilder {
 
-    public static final String TEMPLATE_PACKAGE = "com.livewire.template";
+    public static final String TEMPLATE_PACKAGE = "com.fakeskyline.html2apk.template";
     public static final String TEMPLATE_LABEL = "HTML App";
 
     private ApkBuilder() {}
