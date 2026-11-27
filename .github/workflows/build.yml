@@ -11,6 +11,9 @@ jobs:
         with:
           cmdline-tools-version: 12266719
           packages: platforms;android-36 build-tools;36.0.0
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.11.1
       - run: gradle assembleDebug
       - uses: actions/upload-artifact@v4
         with:
